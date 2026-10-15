@@ -1690,6 +1690,14 @@ function detectPlatformFromUrl(url) {
 }
 
 export async function extractTitleSeasonEpisode(cleanFileName) {
+  // 识别“剧名 剧名 001”或“剧名 · 剧名 001”，归一化为标准季集格式
+  const duplicateTitleMatch = cleanFileName.match(
+    /^(.*?)(?:\s*[·•・]\s*|\s+)\1\s+(\d{3})$/u
+  );
+  if (duplicateTitleMatch) {
+    cleanFileName = `${duplicateTitleMatch[1].trim()} S01E${duplicateTitleMatch[2]}`;
+  }
+
   const regex = /^(.+?)[.\s]+S(\d+)E(\d+)/i;
   const match = cleanFileName.match(regex);
 
